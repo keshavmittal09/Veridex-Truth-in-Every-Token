@@ -1,0 +1,357 @@
+/* ═══════════════════════════════════════════════════════
+   HALLUCINATION AUDITOR — Injected Styles
+   All in-page UI: highlights, badges, tooltips, panels
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Claim Highlights ──────────────────────────────────── */
+.ha-claim {
+  position: relative;
+  border-radius: 3px;
+  padding: 0 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+.ha-hallucination {
+  background: rgba(255, 61, 90, 0.12);
+  text-decoration-color: #ff3d5a;
+  border-bottom: 2px solid #ff3d5a;
+}
+.ha-hallucination:hover { background: rgba(255, 61, 90, 0.22); }
+
+.ha-uncertain {
+  background: rgba(255, 193, 7, 0.12);
+  text-decoration-color: #ffc107;
+  border-bottom: 2px dashed #ffc107;
+}
+.ha-uncertain:hover { background: rgba(255, 193, 7, 0.22); }
+
+/* ── Tooltip ───────────────────────────────────────────── */
+.ha-tooltip {
+  position: absolute;
+  z-index: 999999;
+  max-width: 360px;
+  min-width: 240px;
+  background: #0f1117;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e0e0f0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.ha-tip-hallucination { border-left: 3px solid #ff3d5a; }
+.ha-tip-uncertain     { border-left: 3px solid #ffc107; }
+
+.ha-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ha-tip-icon { font-size: 15px; }
+
+.ha-tip-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.ha-tip-hallucination .ha-tip-label { color: #ff3d5a; }
+.ha-tip-uncertain .ha-tip-label     { color: #ffc107; }
+
+.ha-tip-conf {
+  font-size: 10px;
+  color: #555570;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.ha-tip-reason {
+  color: #c0c0d8;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+}
+
+.ha-tip-correction {
+  background: rgba(0, 196, 125, 0.1);
+  border: 1px solid rgba(0, 196, 125, 0.25);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #cceedd;
+}
+
+.ha-tip-wiki {
+  background: rgba(77, 159, 255, 0.08);
+  border: 1px solid rgba(77, 159, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 11.5px;
+  color: #b0c8e8;
+}
+
+.ha-tip-footer {
+  font-size: 10px;
+  color: #333350;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* ── Trust Score Badge ─────────────────────────────────── */
+.ha-badge {
+  margin: 8px 0 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ha-badge-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 99px;
+  padding: 6px 14px 6px 10px;
+  border-width: 1.5px;
+}
+
+.ha-badge-emoji { font-size: 16px; }
+
+.ha-badge-score-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.ha-badge-score {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ha-badge-label {
+  font-size: 9px;
+  color: #6b6d88;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.ha-badge-pills {
+  display: flex;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.ha-pill {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 99px;
+  padding: 2px 7px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ha-pill-v { background: rgba(0, 196, 125, 0.15); color: #00c47d; }
+.ha-pill-u { background: rgba(255, 193, 7, 0.15);  color: #ffc107; }
+.ha-pill-h { background: rgba(255, 61, 90, 0.15);  color: #ff3d5a; }
+
+/* ── Analyzing Spinner ─────────────────────────────────── */
+.ha-analyzing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b6d88;
+  padding: 6px 0;
+  font-family: -apple-system, sans-serif;
+}
+
+.ha-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(0, 196, 125, 0.2);
+  border-top-color: #00c47d;
+  border-radius: 50%;
+  animation: ha-spin 0.8s linear infinite;
+}
+
+@keyframes ha-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Fresh Start Button ────────────────────────────────── */
+.ha-fresh-btn {
+  margin: 10px 0;
+  font-family: -apple-system, sans-serif;
+}
+
+.ha-fresh-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(255, 61, 90, 0.08), rgba(255, 122, 48, 0.06));
+  border: 1px solid rgba(255, 61, 90, 0.25);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.ha-fresh-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ha-fresh-icon { font-size: 20px; }
+
+.ha-fresh-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ff7a6a;
+  margin-bottom: 2px;
+}
+
+.ha-fresh-sub {
+  font-size: 12px;
+  color: #888899;
+  line-height: 1.4;
+}
+
+.ha-fresh-cta {
+  background: linear-gradient(135deg, #ff3d5a, #ff7a30);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+
+.ha-fresh-cta:hover { opacity: 0.9; transform: scale(1.02); }
+.ha-fresh-cta:disabled { opacity: 0.5; cursor: default; }
+
+/* ── Fresh Start Panel ─────────────────────────────────── */
+.ha-fs-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999998;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  background: #0f1117;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  font-family: -apple-system, sans-serif;
+  overflow: hidden;
+  animation: ha-slide-in 0.3s ease;
+}
+
+@keyframes ha-slide-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.ha-fs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: rgba(0, 196, 125, 0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+  font-weight: 700;
+  color: #00c47d;
+}
+
+.ha-fs-close {
+  background: none;
+  border: none;
+  color: #555570;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.ha-fs-close:hover { color: #e0e0f0; }
+
+.ha-fs-desc {
+  padding: 12px 18px 0;
+  font-size: 12.5px;
+  color: #888899;
+  line-height: 1.5;
+}
+
+.ha-fs-text {
+  display: block;
+  width: calc(100% - 36px);
+  margin: 12px 18px;
+  height: 140px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #c0c0d8;
+  resize: none;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.ha-fs-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 18px 16px;
+}
+
+.ha-fs-copy, .ha-fs-new {
+  flex: 1;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+  border: none;
+}
+
+.ha-fs-copy { background: rgba(0,196,125,0.15); color: #00c47d; border: 1px solid rgba(0,196,125,0.3); }
+.ha-fs-new  { background: rgba(77,159,255,0.15); color: #4d9fff; border: 1px solid rgba(77,159,255,0.3); }
+.ha-fs-copy:hover, .ha-fs-new:hover { opacity: 0.8; }
+
+/* ── API Key Warning ───────────────────────────────────── */
+.ha-apikey-warn {
+  margin: 8px 0;
+  padding: 10px 14px;
+  background: rgba(255,193,7,0.1);
+  border: 1px solid rgba(255,193,7,0.3);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #ffd060;
+  font-family: -apple-system, sans-serif;
+}
+
+.ha-apikey-warn a {
+  color: #ffd060;
+  font-weight: 700;
+  margin-left: 6px;
+}

@@ -1,0 +1,389 @@
+# 🏆 TrustLayer — The Definitive Hackathon Blueprint
+
+## The "100/100" Formula
+
+A perfect hackathon project nails **5 pillars simultaneously**. Miss even one and you drop from "winner" to "honorable mention."
+
+| Pillar | What Judges Look For | TrustLayer Strategy |
+|--------|---------------------|---------------------|
+| **1. Problem Clarity** | "Do I instantly understand why this matters?" | AI hallucinations cost enterprises millions — one sentence, everyone gets it |
+| **2. Technical Depth** | "Is there real engineering, not just API wrappers?" | Multi-source triangulation, claim decomposition pipeline, streaming verification |
+| **3. Demo Impact** | "Did I just say 'wow' out loud?" | Live heatmap turning green/red as verification happens in real-time |
+| **4. Completeness** | "Does this feel like a finished product?" | Polished UI, working flows, export features, not a half-built prototype |
+| **5. Vision & Business** | "Could this be a real company?" | Platform play with plug-in architecture, compliance angle, clear monetization |
+
+---
+
+## 🎯 PART 1: Feature Architecture — Every Feature That Matters
+
+### Core Feature 1: Smart Claim Decomposition Engine
+
+**What it does:** Takes any LLM-generated paragraph and breaks it into individual atomic claims, each tagged with a type.
+
+**Example Input:**
+> "Tesla's revenue grew 40% in 2024, making it the world's most valuable car company. Experts believe EV adoption will reach 50% by 2028."
+
+**Example Output:**
+| # | Claim | Type | Status |
+|---|-------|------|--------|
+| 1 | "Tesla's revenue grew 40% in 2024" | 📊 Statistical Fact | ❌ Incorrect (actual: 3%) |
+| 2 | "most valuable car company" | 📊 Verifiable Fact | ✅ Verified (by market cap) |
+| 3 | "EV adoption will reach 50% by 2028" | 🔮 Prediction/Speculation | ⚠️ Unverifiable — flagged as opinion |
+
+**Why judges love this:** It shows you didn't just build "ChatGPT + Google Search." You built an **intelligent parsing layer** that understands the *nature* of each claim before trying to verify it.
+
+**Implementation:**
+```
+User Input (LLM text)
+        ↓
+ [Gemini/GPT API Call — System Prompt: "Decompose into atomic claims, classify each as:
+  STATISTICAL_FACT, VERIFIABLE_FACT, REASONING, PREDICTION, OPINION"]
+        ↓
+ JSON Array of { claim, type, original_sentence_index }
+        ↓
+ Route each claim to appropriate verifier
+```
+
+---
+
+### Core Feature 2: Multi-Source Triangulation
+
+**What it does:** Each verifiable claim gets checked against **3+ independent sources**. A visual "trust triangle" shows agreement/disagreement.
+
+**Sources to integrate (use free APIs):**
+
+| Source | What It Verifies | API |
+|--------|-----------------|-----|
+| **Wikipedia** | General facts, dates, entities | `en.wikipedia.org/api/rest_v1/` |
+| **Google Fact Check** | Known misinformation | `factchecktools.googleapis.com` |
+| **Wikidata** | Structured entity data (numbers, dates, relationships) | `wikidata.org/wiki/Special:EntityData` |
+| **News API** | Recent events | `newsapi.org` or `gnews.io` |
+| **PubMed** (bonus) | Medical claims | `eutils.ncbi.nlm.nih.gov` |
+
+**The Triangulation Logic:**
+```
+3/3 sources agree   → 🟢 HIGH confidence (90-100%)
+2/3 sources agree   → 🟡 MEDIUM confidence (60-80%)  
+1/3 sources agree   → 🟠 LOW confidence (30-50%)
+0/3 or contradicted → 🔴 LIKELY HALLUCINATION (0-20%)
+Sources not found   → ⚪ UNVERIFIABLE
+```
+
+**Why judges love this:** You're mimicking how **real journalism** works — no serious news org publishes based on one source.
+
+---
+
+### Core Feature 3: Real-Time Streaming Verification Dashboard
+
+**This is your KILLER demo moment.**
+
+**How it works:**
+1. User pastes text OR enters a prompt that gets sent to an LLM
+2. The LLM response streams in on the left panel
+3. On the right panel, a **live heatmap** shows each sentence being verified in real-time
+4. Sentences transition through states: ⬜ Pending → 🔵 Checking → 🟢/🟡/🔴 Verified
+
+**Technical flow:**
+```
+Frontend                           Backend
+   │                                  │
+   │── Send text ──────────────────→  │
+   │                                  │── Decompose claims
+   │                                  │── For each claim:
+   │  ←── WebSocket: claim found ──── │     │── Query Source 1
+   │  ←── WebSocket: checking... ──── │     │── Query Source 2  (parallel)
+   │  ←── WebSocket: result ───────── │     │── Query Source 3
+   │                                  │
+   │── Render heatmap update ──       │
+```
+
+**UI Layout:**
+```
+┌─────────────────────────────────────────────────────────┐
+│  TrustLayer                              [Dark Mode] 🌙 │
+├────────────────────────┬────────────────────────────────┤
+│                        │          TRUST HEATMAP          │
+│   INPUT / LLM OUTPUT   │                                │
+│                        │  "Tesla's revenue..."  🔴 12%  │
+│   [Your text appears   │  "most valuable..."    🟢 94%  │
+│    here, sentence by   │  "EV adoption..."      ⚠️ N/A  │
+│    sentence, with      │                                │
+│    color-coded bg]     │  ┌─────────────────────────┐   │
+│                        │  │  OVERALL TRUST SCORE    │   │
+│                        │  │       62 / 100          │   │
+│                        │  │  ████████░░░░░░░░░░░░   │   │
+│                        │  └─────────────────────────┘   │
+├────────────────────────┴────────────────────────────────┤
+│  DETAILED VERIFICATION REPORT                           │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │ Claim 1: "Tesla's revenue grew 40% in 2024"       │ │
+│  │ Status: ❌ HALLUCINATION DETECTED                  │ │
+│  │ Evidence: Actual growth was ~3% (Source: Wikipedia) │ │
+│  │ Sources: [Wikipedia ❌] [Wikidata ❌] [News ❌]     │ │
+│  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Core Feature 4: Hallucination Heatmap Visualization
+
+**Color-coded text overlay** on the original content:
+
+- Each sentence gets a **background color** based on its verification status
+- Hovering shows a tooltip with source evidence
+- The entire document gets an **Overall Trust Score** (0-100)
+
+**Trust Score Formula:**
+```
+Trust Score = (Σ claim_confidence × claim_weight) / total_claims
+
+Where:
+- Statistical claims have weight 1.5 (harder to verify, more impactful if wrong)
+- Factual claims have weight 1.0
+- Opinions/predictions have weight 0.3 (they can't be "wrong")
+```
+
+---
+
+### Core Feature 5: Trust Certificate & Export
+
+**Generate a downloadable PDF report:**
+- Overall Trust Score with visual gauge
+- Breakdown of claims verified/failed/unverifiable
+- Full source citations for each verification
+- Timestamp and document hash for audit trail
+- A "TrustLayer Verified ✅" badge that can be embedded
+
+**Why this matters:** This directly addresses **EU AI Act compliance** requirements for AI output transparency.
+
+---
+
+### Core Feature 6: Domain-Specific Verification Modes
+
+A **dropdown selector** for verification context:
+
+| Mode | Special Handling |
+|------|-----------------|
+| 🏥 **Medical** | Prioritize PubMed, flag dosage/drug claims with extra scrutiny |
+| ⚖️ **Legal** | Flag case citations, check jurisdiction accuracy |
+| 💰 **Financial** | Verify numbers against market data, flag outdated statistics |
+| 📰 **News/General** | Balanced source checking across Wikipedia + News APIs |
+
+Even if you only **fully implement 1-2 modes**, having the dropdown shows **platform thinking**.
+
+---
+
+## 🎨 PART 2: UI/UX — Making It Look Like a $10M Product
+
+### Design Principles
+
+> [!IMPORTANT]
+> In hackathons, **UI is 40% of the score** even when judges say it isn't. A beautiful UI signals competence, attention to detail, and finished-product thinking.
+
+**Design System:**
+- **Font:** Inter or SF Pro (clean, modern, professional)
+- **Color Palette:**
+  - Background: `#0a0a0f` (deep dark), `#12121a` (card surfaces)
+  - Accent: `#6366f1` (indigo) for primary actions
+  - Trust colors: `#22c55e` (green/verified), `#f59e0b` (amber/uncertain), `#ef4444` (red/hallucination)
+  - Text: `#f1f5f9` (primary), `#94a3b8` (secondary)
+- **Effects:** Subtle glassmorphism on cards, smooth transitions on verification states
+- **Animations:** Pulse animation on "checking..." state, smooth color transitions on verification complete
+
+### Key UI Elements
+
+1. **Hero Section** — Clean input area with tagline: *"Don't trust AI. Verify it."*
+2. **Split Panel** — Left: source text with inline highlighting. Right: verification dashboard
+3. **Animated Trust Score** — Large circular gauge that fills up as verification progresses
+4. **Source Cards** — Expandable cards showing evidence with ✅/❌ badges
+5. **Micro-animations** — Sentences "shimmer" while being verified, then settle into their final color
+
+---
+
+## 🏗️ PART 3: Technical Architecture
+
+### Tech Stack
+
+| Layer | Technology | Rationale |
+|-------|-----------|-----------|
+| **Frontend** | Next.js 14+ (App Router) | SSR, excellent DX, React ecosystem |
+| **Styling** | Vanilla CSS with CSS variables | Full control, dark mode via variables |
+| **Real-time** | WebSockets (Socket.io) | Live verification streaming |
+| **Backend** | Python FastAPI | Async, fast, perfect for AI workloads |
+| **LLM** | Google Gemini API | Claim decomposition & analysis |
+| **Knowledge APIs** | Wikipedia, Wikidata, Google Fact Check, News API | Multi-source verification |
+| **PDF Export** | html2canvas + jsPDF | Trust certificate generation |
+
+### Backend API Design
+
+```
+POST /api/verify
+  Body: { text: string, mode: "general" | "medical" | "legal" | "financial" }
+  Returns: WebSocket connection ID
+
+WebSocket /ws/{connection_id}
+  Emits events:
+    → "claim_found"     { id, text, type, sentence_index }
+    → "claim_checking"  { id, source_name }
+    → "claim_result"    { id, source_name, status, evidence, confidence }
+    → "verification_complete" { overall_score, summary }
+
+GET /api/report/{connection_id}
+  Returns: Full verification report JSON
+
+GET /api/certificate/{connection_id}
+  Returns: PNG/PDF trust certificate
+```
+
+### Claim Decomposition Prompt
+
+```python
+DECOMPOSITION_PROMPT = """
+You are a fact-checking analyst. Given the following text, decompose it into
+individual atomic claims. For each claim, provide:
+
+1. "claim": The exact claim text
+2. "type": One of: STATISTICAL_FACT, VERIFIABLE_FACT, HISTORICAL_FACT,
+           REASONING, PREDICTION, OPINION, DEFINITION
+3. "checkable": true/false — whether this can be verified against external data
+4. "search_queries": List of 2-3 search queries to help verify this claim
+5. "sentence_index": Which sentence (0-indexed) this claim appears in
+
+Return as a JSON array. Be exhaustive — extract EVERY factual claim.
+Even implied claims should be extracted.
+
+Text to analyze:
+{text}
+"""
+```
+
+### Verification Engine (parallel checking)
+
+```python
+async def verify_claim(claim: dict, mode: str) -> dict:
+    """Verify a single claim against multiple sources concurrently."""
+    tasks = [
+        check_wikipedia(claim["search_queries"]),
+        check_wikidata(claim["search_queries"]),
+        check_google_factcheck(claim["claim"]),
+    ]
+    
+    if mode == "medical":
+        tasks.append(check_pubmed(claim["search_queries"]))
+    
+    results = await asyncio.gather(*tasks)
+    confidence = triangulate(results)
+    
+    return {
+        "claim_id": claim["id"],
+        "confidence": confidence,
+        "sources": results,
+        "verdict": get_verdict(confidence),
+    }
+```
+
+---
+
+## 🎤 PART 4: Demo Script — The 3-Minute Winning Pitch
+
+### Beat 1: The Problem (30 seconds)
+> "Last year, a lawyer used ChatGPT to prepare a court filing. The AI cited 6 legal cases. None of them existed. He was sanctioned by the court.
+> 
+> A medical chatbot recommended combining two drugs that cause fatal interactions.
+>
+> 73% of enterprises are deploying LLMs without any verification layer.
+>
+> AI hallucinations aren't just embarrassing — they're dangerous."
+
+### Beat 2: The Solution (20 seconds)
+> "TrustLayer is a real-time AI verification engine. It decomposes LLM output into individual claims and verifies each one against multiple trusted sources — automatically, in real-time."
+
+### Beat 3: LIVE DEMO (90 seconds) ⭐ THE MAIN EVENT
+
+1. Open TrustLayer dashboard. Show the clean, dark UI
+2. Paste a hallucination-prone LLM response (prepared in advance)
+3. Click "Verify." Watch the magic:
+   - Claims appear one by one
+   - Shimmer animation as each is checked
+   - Sources light up: ✅ Wikipedia confirmed, ❌ Wikidata contradicts
+   - Heatmap turns sentences green/red in real-time
+   - Trust score gauge fills: "62/100 — Proceed with caution"
+4. Click a RED claim — show the evidence panel with contradicting sources
+5. Click "Generate Trust Certificate" — show the downloadable PDF
+
+### Beat 4: Why It's Different (20 seconds)
+> "Three things no one else does:
+> 1. **Decomposes** claims by type — knows fact from opinion
+> 2. **Triangulates** across 3+ independent sources — like a real newsroom
+> 3. Works in **real-time** — not after the fact, but as the AI generates"
+
+### Beat 5: Vision (15 seconds)
+> "Today it's a dashboard. Tomorrow it's an API between every LLM and every user. The trust layer AI needs to go mainstream. The layer the EU AI Act requires."
+
+---
+
+## ⚡ PART 5: The "Extra Mile" Details That Win
+
+### 1. Prepare Your Demo Data
+- A **pre-loaded example** with a mix of true facts, hallucinations, and opinions
+- A **backup recording** of the demo in case WiFi dies
+- A **second example** in a different domain (medical vs. financial)
+
+### 2. Easter Eggs for Judges
+- Let users verify their OWN AI content by pasting any text
+- "Try it with ChatGPT" button that sends a known-hallucinatory prompt and auto-verifies
+
+### 3. Metrics Dashboard
+```
+"Claims verified: 147  |  Hallucinations caught: 23  |  Avg trust score: 71%"
+```
+
+### 4. Browser Extension Mockup
+Show a 10-second mockup of a Chrome extension adding trust scores to ChatGPT inline. Even non-functional, it shows **platform vision**.
+
+### 5. Loading States
+Beautiful skeleton screens with contextual micro-copy:
+- "Decomposing claims..." → "Consulting Wikipedia..." → "Cross-referencing sources..." → "Building trust report..."
+
+---
+
+## 🚫 PART 6: Pitfalls to Avoid
+
+| Mistake | Why It Kills Your Score | Prevention |
+|---------|----------------------|------------|
+| Trying to build everything | Half-finished product | Pick 4 core features, polish to perfection |
+| Live API failures during demo | Judges don't give second chances | Pre-cache responses, have fallbacks |
+| Generic ChatGPT wrapper | "So you just call an API?" | Emphasize decomposition + triangulation logic |
+| Ugly UI | Signals "weekend project" | Invest 30% of time on UI polish |
+| All talk, no demo | Loses instantly | 60% of pitch should be live demo |
+| No business angle | "Cool tech, now what?" | EU AI Act compliance + SaaS pricing |
+
+---
+
+## 📋 PART 7: Hackathon Timeline (24 hours)
+
+| Hour | Task | Deliverable |
+|------|------|-------------|
+| 0-1 | Setup project, install deps, design system | Running Next.js + FastAPI skeleton |
+| 1-3 | Build claim decomposition engine | Working decomposition with LLM |
+| 3-5 | Build verification engine (Wikipedia + Wikidata + Fact Check API) | Claims verified against 3 sources |
+| 5-7 | Build WebSocket streaming pipeline | Real-time updates flowing to frontend |
+| 7-10 | Build main dashboard UI (split panel, heatmap, trust score) | Core UI complete |
+| 10-12 | Build detailed report view + source evidence cards | Drill-down verification details |
+| 12-14 | Build trust certificate export | Downloadable PDF report |
+| 14-16 | Domain mode selector + polish verification logic | Multi-domain support |
+| 16-18 | UI polish: animations, transitions, loading states, dark mode | Premium feel |
+| 18-20 | End-to-end testing, bug fixes, demo data preparation | Stable demo |
+| 20-22 | Prepare pitch, rehearse demo, record backup video | Pitch ready |
+| 22-24 | Final polish | Ready to win |
+
+---
+
+## 🔥 The One Sentence That Wins
+
+When a judge asks "Why should this win?":
+
+> **"Every AI app in the world needs a trust layer between the model and the user. We built it."**
+
+That's the vision. That's why TrustLayer is a 100.

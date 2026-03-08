@@ -1,0 +1,15 @@
+event: claim_checking
+data: {"event": "claim_checking", "claimId": 0, "claim": "The Earth is flat"}
+
+event: checking_source
+data: {"event": "checking_source", "claimId": 0, "sourceName": "All Sources", "sourceTitle": "Querying sources for general mode..."}
+
+event: checking_source
+data: {"event": "checking_source", "claimId": 0, "sourceName": "Google Serper", "sourceTitle": "Google results for: The Earth is flat"}
+
+event: claim_result
+data: {"event": "claim_result", "claimId": 0, "claim": "The Earth is flat", "type": "VERIFIABLE_FACT", "sentenceIndex": 0, "verdict": "HALLUCINATION", "confidence": 1.0, "explanation": "Contradicted by 1 source(s): Google Serper", "sources": [{"verdict": "CONTRADICTS", "confidence": 1.0, "evidence": "Flat Earth is an archaic and scientifically disproven conception of the Earth's shape as a plane or disk.", "explanation": "The source text explicitly states that the flat Earth conception is scientifically disproven, directly contradicting the claim that the Earth is flat.", "sourceName": "Google Serper", "sourceTitle": "Google results for: The Earth is flat", "sourceUrl": "https://en.wikipedia.org/wiki/Flat_Earth"}], "sourceBreakdown": {"supports": 0, "contradicts": 1, "insufficient": 0, "total": 1}, "numericalAnalysis": null, "correction": {"correctedClaim": "The Earth is an oblate spheroid", "explanation": "The claim that the Earth is flat is a scientifically disproven conception, contradicted by overwhelming evidence from various fields of science. The Earth's shape is actually an oblate spheroid, meaning it is slightly flattened at the poles and bulging at the equator. This fact is supported by a wide range of scientific observations and measurements.", "confidence": 0.99, "citations": [{"source": "Wikipedia", "quote": "Flat Earth is an archaic and scientifically disproven conception of the Earth's shape as a plane or disk.", "url": "https://en.wikipedia.org/wiki/Flat_Earth"}]}}
+
+event: verification_complete
+data: {"event": "verification_complete", "overallScore": 2, "totalClaims": 1, "visualizationData": {"verdictDistribution": {"HALLUCINATION": 1}, "claimTypeBreakdown": {"VERIFIABLE_FACT": 1}, "sourceAgreement": {"supports": 0, "contradicts": 1, "insufficient": 0}}, "complianceReport": null}
+

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Hackathon Prompt — Hallucination Auditor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:#07070d; --s1:#0e0e18; --s2:#141420;
+    --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+    --green:#00c47d; --red:#ff3d5a; --yellow:#ffc107; --blue:#4d9fff;
+    --text:#dde0f0; --muted:#66668a;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;padding:40px 24px;line-height:1.6;}
+  .wrap{max-width:860px;margin:0 auto;}
+
+  h1{font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1;margin-bottom:6px;}
+  h1 em{color:var(--green);font-style:normal;}
+
+  .sub{font-size:14px;color:var(--muted);margin-bottom:36px;font-weight:300;}
+
+  h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin:32px 0 14px;
+    color:var(--green); text-transform:uppercase; letter-spacing:0.5px;}
+
+  .prompt-box{
+    background:var(--s1);border:1px solid var(--border2);border-radius:14px;
+    padding:28px;margin-bottom:24px;position:relative;
+  }
+
+  .prompt-box pre{
+    font-family:'DM Mono',monospace;font-size:13.5px;line-height:1.75;
+    color:#c8ccee;white-space:pre-wrap;word-break:break-word;
+  }
+
+  .copy-btn{
+    position:absolute;top:14px;right:14px;
+    background:rgba(0,196,125,0.12);border:1px solid rgba(0,196,125,0.3);
+    border-radius:7px;color:var(--green);font-size:11px;font-weight:700;
+    padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;
+    transition:opacity 0.2s;
+  }
+  .copy-btn:hover{opacity:0.8;}
+
+  .kw{color:var(--green);}
+  .str{color:var(--yellow);}
+  .cmt{color:#3a3a5a;}
+  .hl{color:var(--blue);}
+
+  .tag{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;
+    padding:2px 8px;border-radius:99px;letter-spacing:1px;margin-right:4px;}
+  .tag-g{background:rgba(0,196,125,0.12);color:var(--green);border:1px solid rgba(0,196,125,0.25);}
+  .tag-r{background:rgba(255,61,90,0.12);color:var(--red);border:1px solid rgba(255,61,90,0.25);}
+  .tag-y{background:rgba(255,193,7,0.12);color:var(--yellow);border:1px solid rgba(255,193,7,0.25);}
+  .tag-b{background:rgba(77,159,255,0.12);color:var(--blue);border:1px solid rgba(77,159,255,0.25);}
+
+  .section-note{
+    background:rgba(0,196,125,0.05);border:1px solid rgba(0,196,125,0.15);
+    border-radius:10px;padding:14px 16px;font-size:13px;color:var(--muted);
+    margin-bottom:16px;line-height:1.6;
+  }
+  .section-note strong{color:var(--text);}
+
+  table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;}
+  th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);}
+  td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  td:first-child{font-weight:600;color:var(--green);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">⚡ Hackathon Master Document</div>
+<h1>FINAL <em>DETAILED</em><br>PROMPT</h1>
+<p class="sub">Copy-paste ready prompts for every part of the Hallucination Auditor Chrome Extension</p>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>01 — The Master Build Prompt</h2>
+<div class="section-note">
+  <strong>Use this:</strong> When asking any AI (Claude, ChatGPT, Cursor, GitHub Copilot) to help you build or extend this project. This is the "God prompt" that gives full context.
+</div>
+<div class="prompt-box">
+  <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  <pre>
+You are an expert Chrome Extension developer specializing in Manifest V3, DOM manipulation, and AI API integration.
+
+Build a fully working Google Chrome Extension called "Hallucination Auditor" with the following complete specification:
+
+=== PURPOSE ===
+A real-time hallucination and lie detector that watches any conversation on ChatGPT (chatgpt.com), Claude.ai, and Gemini. It analyzes BOTH the user's prompt AND the AI's response, then highlights specific claims that are false or uncertain directly in the chat interface.
+
+=== CORE FEATURES (must implement all) ===
+
+1. DOM OBSERVER: Use MutationObserver to detect when AI finishes streaming a response. Works on chatgpt.com, claude.ai, gemini.google.com.
+
+2. CLAIM HIGHLIGHTER: Inject colored underlines into the AI message bubble:
+   - Red underline = hallucination (false claim)  
+   - Yellow dashed underline = uncertain claim
+   - Do NOT modify verified claims (no green highlight — only underline problematic ones)
+
+3. HOVER TOOLTIP: When user hovers a highlighted claim, show a tooltip with:
+   - Verdict (🔴 HALLUCINATION or 🟡 UNCERTAIN)
+   - Confidence percentage
+   - Brief reason (why it's wrong)
+   - Correction (correct information to replace it)
+   - Wikipedia snippet (if available from Wikipedia API)
+
+4. TRUST SCORE BADGE: After each AI response, inject a small floating badge showing:
+   - Overall trust percentage (0–100%)
+   - Animated counter (counts up from 0)
+   - Pills showing verified/uncertain/hallucination counts
+   - Badge color: green ≥80%, yellow 55–79%, red <55%
+
+5. FRESH START PANEL: When ≥3 hallucinations detected OR trust score <40%, show a red warning button "⚡ Fresh Start". Clicking it:
+   - Calls Claude API to summarize the conversation, removing hallucinated content
+   - Shows a floating panel with the clean summary as a copy-paste prompt
+   - "Open New Chat" button links to chatgpt.com/claude.ai/gemini
+
+6. POPUP UI (3 tabs):
+   Tab 1 - Live Audit: Ring chart showing trust score, claim list (non-verified claims only), fresh start button if needed
+   Tab 2 - Session Stats: Verified/uncertain/hallucination counts, accuracy bar chart, reset button
+   Tab 3 - Settings: API key input, domain mode selector, sensitivity, toggles for auto-analyze/badge/enable
+
+7. OPTIONS PAGE: First-run setup page with step-by-step API key instructions
+
+=== TECHNICAL SPEC ===
+
+Manifest Version: 3 (MV3)
+API: Anthropic Claude (claude-sonnet-4-20250514) via https://api.anthropic.com/v1/messages
+Secondary API: Wikipedia REST API for claim cross-verification
+Storage: chrome.storage.sync for settings/API key, chrome.storage.local for session stats
+Message passing: content-script ↔ service-worker ↔ popup via chrome.runtime.sendMessage
+
+File structure:
+hallucination-auditor/
+├── manifest.json
+├── src/background/service-worker.js   (API calls only — no DOM access)
+├── src/content/content-script.js       (DOM injection, MutationObserver)
+├── src/content/injected.css            (highlight styles, tooltip, badge, panels)
+├── src/popup/popup.html + popup.js + popup.css
+└── src/options/options.html
+
+=== CLAIM EXTRACTION PROMPT (use this exact system prompt for Claude API) ===
+
+System: "You are a world-class AI hallucination detector. Extract all factual claims from the given AI response and assess each one. Return ONLY valid JSON with no markdown:
+{
+  claims: [{text, verdict: verified|uncertain|hallucination, confidence: 0-100, reason, correction}],
+  trustScore: 0-100,
+  overallVerdict: string,
+  shouldSuggestFreshStart: boolean,
+  topIssue: string|null
+}"
+
+=== PLATFORM-SPECIFIC SELECTORS ===
+
+ChatGPT: AI messages = [data-message-author-role="assistant"], content = .markdown
+Claude.ai: AI messages = [data-testid="assistant-message"], content = .prose  
+Gemini: AI messages = model-response, content = .markdown
+
+Use MutationObserver watching for childList + subtree + attributes (data-is-streaming).
+Delay analysis by 800ms after message appears to ensure streaming is complete.
+
+=== DESIGN REQUIREMENTS ===
+- Dark theme: background #07070d, surface #0e0e18, accent #00c47d
+- Font: system-ui / Inter for UI, JetBrains Mono for scores/code
+- All UI is non-intrusive — don't break the platform's layout
+- Tooltips are positioned to avoid viewport overflow
+- All panels have close buttons and smooth animations
+
+=== IMPORTANT CONSTRAINTS ===
+- Service worker handles ALL external API calls (CORS requirement in MV3)
+- Content script only does DOM manipulation and sends messages to service worker  
+- API key stored in chrome.storage.sync, never hardcoded
+- Analyze max 3000 chars of AI response to control API costs
+- Only run analysis on platforms in host_permissions list
+</pre>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>02 — Service Worker Prompt</h2>
+<div class="section-note">
+  Use this when you need to rebuild or debug <strong>only the API layer</strong> (service-worker.js).
+</div>
+<div class="prompt-box">
+  <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  <pre>
+Write a Chrome Extension Manifest V3 service worker (service-worker.js) that:
+
+1. Handles chrome.runtime.onMessage for these actions:
+   - "analyzeText": takes {text, context, domainMode, sensitivity} → calls Anthropic Claude API → returns claim analysis JSON
+   - "generateFreshStart": takes {history} → calls Claude API → returns {summary} for clean re-prompt  
+   - "getSessionStats": returns stats from chrome.storage.local
+   - "resetStats": resets session stats to zero
+
+2. Claude API call (POST https://api.anthropic.com/v1/messages):
+   - Model: claude-sonnet-4-20250514
+   - Auth header: x-api-key from chrome.storage.sync
+   - System prompt: fact-checker that returns ONLY JSON with {claims, trustScore, overallVerdict, shouldSuggestFreshStart, topIssue}
+   - Each claim: {text, verdict, confidence, reason, correction}
+   - verdicts: "verified" | "uncertain" | "hallucination"
+
+3. Wikipedia verification: for top 2 hallucination claims, call Wikipedia REST API summary endpoint. Attach wikiContext to claim.
+
+4. Update chrome.storage.local sessionStats after each analysis.
+
+5. On chrome.runtime.onInstalled: set default settings, open options page.
+
+Return only the complete service-worker.js file with no explanation.
+</pre>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>03 — Content Script Prompt</h2>
+<div class="section-note">
+  Use this to rebuild <strong>content-script.js</strong> — the DOM injection engine.
+</div>
+<div class="prompt-box">
+  <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  <pre>
+Write a Chrome Extension content script (content-script.js) that injects into chatgpt.com, claude.ai, and gemini.google.com and does the following:
+
+PLATFORM DETECTION:
+- Auto-detect platform from window.location.hostname
+- Use different CSS selectors per platform:
+  ChatGPT: aiMsg=[data-message-author-role="assistant"], content=.markdown
+  Claude:  aiMsg=[data-testid="assistant-message"], content=.prose
+  Gemini:  aiMsg=model-response, content=.markdown
+
+MUTATION OBSERVER:
+- Watch document root for new AI message elements
+- Also watch for data-is-streaming attribute changes (Claude)
+- Delay 800ms before triggering analysis to ensure streaming complete
+- Track analyzed message IDs in a Set to avoid re-analyzing
+
+ANALYSIS PIPELINE (async):
+1. Extract innerText from AI message element
+2. Build conversation context from last 6 messages
+3. Send to service worker: {action:"analyzeText", text, context, domainMode, sensitivity}
+4. On result: inject highlights, badge, and (if needed) fresh start button
+
+HIGHLIGHT INJECTION:
+- Use TreeWalker (NodeFilter.SHOW_TEXT) to find text nodes containing the claim
+- Split text node into [before, span, after] using insertBefore/removeChild
+- Add span.className = "ha-claim ha-{verdict}" with dataset for tooltip data
+- Attach mouseenter/mouseleave listeners for tooltip
+
+TRUST SCORE BADGE:
+- Create .ha-badge element and insert after message element
+- Show animated counter (setInterval) counting from 0 to score
+- Color-code based on score: ≥80 green, ≥55 yellow, <55 red
+
+FRESH START BUTTON:
+- Show .ha-fresh-btn when shouldSuggestFreshStart OR hallucinationTotal >= 3
+- On click: call service worker generateFreshStart → show floating .ha-fs-panel
+- Panel has: copy-to-clipboard, open new chat, close button
+
+CONVERSATION TRACKING:
+- Track user messages in a conversationLog array: [{role, text}]
+- Keep last 20 messages for context building
+
+MESSAGE LISTENER:
+- Handle "getConversationStats", "settingsUpdated", "triggerFreshStart" from popup
+
+All UI elements use class names prefixed with "ha-" to avoid conflicts with host page CSS.
+Return only the complete content-script.js.
+</pre>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>04 — Popup UI Prompt</h2>
+<div class="section-note">
+  Use this to rebuild the <strong>popup.html / popup.js / popup.css</strong> trio.
+</div>
+<div class="prompt-box">
+  <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  <pre>
+Build a Chrome Extension popup (popup.html + popup.js + popup.css) with dark theme and 3 tabs:
+
+DESIGN SPEC:
+- Width: 360px (standard Chrome popup width)
+- Dark theme: bg #0b0b12, surface #111118, accent #00c47d
+- Font: Inter for UI, JetBrains Mono for numbers/code
+- No external CDN imports — pure CSS/JS only
+
+TAB 1 — LIVE AUDIT:
+- SVG ring chart showing trust score (0–100%) with animated stroke-dashoffset
+- Score color: ≥80 = #00c47d, ≥55 = #ffc107, <55 = #ff3d5a
+- Claim count pills: ✓ Verified | ? Uncertain | ✗ Hallucinations
+- Scrollable claims list (max-height 180px): shows only uncertain + hallucination claims
+  Each claim: verdict badge, claim text (2-line clamp), reason, correction if available
+- Fresh Start button (hidden by default, shown when hallucinations detected)
+- Platform name shown in header (ChatGPT / Claude.ai / Gemini)
+
+TAB 2 — STATS:
+- 4 stat cards in 2x2 grid: Total Analyzed, Hallucinations, Uncertain, Verified
+- Stacked accuracy bar (CSS widths for green/yellow/red segments, animated)
+- Reset session button
+
+TAB 3 — SETTINGS:
+- API key input (password type) with Save button and validation
+- Domain mode select: General/Medical/Legal/Financial/Historical/Scientific
+- Sensitivity select: Low/Medium/High
+- Toggle switches for: Auto-Analyze, Show Trust Badge, Extension Enabled
+- Save All Settings button
+
+JAVASCRIPT LOGIC:
+- On load: query active tab URL to show platform name
+- Send getConversationStats to content script to get session data
+- Listen for analysisComplete message from content script → update ring + claims list
+- Load/save settings via chrome.storage.sync
+- Load session stats via chrome.runtime.sendMessage({action:"getSessionStats"})
+
+Return complete, styled, working popup.html, popup.js, popup.css as separate code blocks.
+</pre>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>05 — Debugging Prompts</h2>
+<div class="section-note">
+  Quick-fire prompts for <strong>common issues</strong> during hackathon builds.
+</div>
+
+<table>
+  <thead>
+    <tr><th>Problem</th><th>Prompt to Use</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Highlights not appearing</td>
+      <td>"The content script's TreeWalker isn't finding the text node for claim: '[X]'. The host page is ChatGPT. The AI message element uses class .markdown. The claim text is: '[Y]'. Debug the highlightClaimInElement function and fix the text node search."</td>
+    </tr>
+    <tr>
+      <td>MutationObserver fires too early</td>
+      <td>"My MutationObserver fires while ChatGPT is still streaming. The streaming indicator is .result-streaming. Fix the isStreamingComplete function to return false while this class is present, and retry every 500ms until complete."</td>
+    </tr>
+    <tr>
+      <td>API key not being read</td>
+      <td>"In Chrome Extension MV3, chrome.storage.sync.get is async. My service worker is calling getApiKey() but the key is undefined. Fix the getApiKey function to properly await the Promise and handle the case where the key doesn't exist."</td>
+    </tr>
+    <tr>
+      <td>Tooltip positioning</td>
+      <td>"My tooltip div is positioned with position:absolute and top/left set from getBoundingClientRect(). It's going off-screen on the right side. Fix the positioning logic to clamp within window.innerWidth and window.innerHeight, accounting for window.scrollX and scrollY."</td>
+    </tr>
+    <tr>
+      <td>Claude API JSON parse fails</td>
+      <td>"The Claude API sometimes returns JSON wrapped in markdown code fences. Write a robust parseClaudeJSON(rawText) function that strips ```json``` fences, handles trailing commas, and falls back to regex extraction if JSON.parse fails."</td>
+    </tr>
+    <tr>
+      <td>Extension not injecting on Claude.ai</td>
+      <td>"My content script isn't injecting on claude.ai. Check my manifest.json host_permissions and content_scripts matches array. Claude uses a React SPA. Fix the MutationObserver target selector and ensure it watches the correct root element for claude.ai's DOM structure."</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ════════════════════════════════════════════ -->
+<h2>06 — Hackathon Pitch Prompt</h2>
+<div class="section-note">
+  Use this with Claude to <strong>write your 3-minute pitch script</strong> for the hackathon presentation.
+</div>
+<div class="prompt-box">
+  <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  <pre>
+Write a 3-minute hackathon pitch script for a product called "Hallucination Auditor" — a Chrome Extension that detects AI hallucinations in real-time on ChatGPT, Claude, and Gemini.
+
+The pitch should follow this structure:
+
+1. HOOK (20 seconds): Start with a shocking stat or relatable moment. Example: "Last week, a lawyer submitted a court brief with 6 fake case citations — all generated by ChatGPT. He faced sanctions. This is happening to professionals everywhere."
+
+2. PROBLEM (30 seconds): Enterprise AI adoption is blocked by factual unreliability. Users can't tell when AI is lying vs. telling the truth. Current solutions require copy-pasting into separate tools.
+
+3. DEMO TEASER (20 seconds): "We built the world's first browser-native hallucination firewall. Let me show you."
+[Do the live demo at this point]
+
+4. HOW IT WORKS (40 seconds): Real-time claim extraction, multi-source verification (Claude API + Wikipedia), inline highlights, trust score, and a Fresh Start button when AI goes off the rails.
+
+5. UNIQUE FEATURES (30 seconds): 
+   - Works inside ChatGPT/Claude/Gemini — no copy-pasting
+   - Domain modes (Medical/Legal/Financial) for enterprise use cases
+   - "Fresh Start" generates a clean re-prompt from hallucination-free context
+   - Session-level accuracy tracking
+
+6. MARKET & MONETIZATION (20 seconds): B2B SaaS — $50/month per seat for enterprises in healthcare, legal, finance. API call pricing for developers.
+
+7. CLOSE (20 seconds): "In the last 24 hours, our extension caught [X] hallucinations across [Y] conversations. Every one of those was a fact that could have cost someone their health, their case, or their money. We're not just building a browser extension — we're building trust in AI."
+
+Make it conversational, confident, and punchy. Include [PAUSE] markers for dramatic effect. End with a clear ask: feedback, partnerships, or investors.
+</pre>
+</div>
+
+<script>
+function copyText(btn) {
+  const pre = btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+</script>
+</div>
+</body>
+</html>
