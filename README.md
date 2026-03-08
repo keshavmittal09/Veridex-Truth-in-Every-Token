@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Veridex — Truth in Every Token. 🛡️
 
-## Getting Started
+**Veridex** is a real-time AI hallucination verification engine. It acts as a trust layer between Large Language Models (LLMs) and end-users, automatically validating AI-generated claims against multiple trusted sources to ensure accuracy, safety, and compliance.
 
-First, run the development server:
+## ✨ Features
+
+- **Real-Time Fact-Checking Extension**: A Chrome extension that transparently monitors LLM outputs (like ChatGPT) and instantly cross-references claims.
+- **Multi-Source Triangulation**: Verifies facts against established APIs including Wikipedia, Wikidata, DuckDuckGo Web Search, and Google Fact Check API.
+- **Smart Claim Decomposition**: Breaks down AI-generated paragraphs into atomic claims, distinguishing between objective facts, historical data, and subjective opinions.
+- **Provider Agnostic**: Flexibility to run the underlying verification engine using either **Google Gemini** or **Groq** APIs—tunable right from the extension popup.
+- **Hallucination Heatmap Visuals**: Intuitive UI highlighting verified truths in green and flagged hallucinations in red.
+
+## 🏗️ Architecture
+
+Veridex is built on a modern, high-performance stack:
+
+- **Frontend / Dashboard**: Next.js 14+ (App Router)
+- **Backend Verification Engine**: Python FastAPI
+- **Real-Time Extension**: Vanilla JS injecting directly into ChatGPT's DOM to intercept and parse text streams.
+- **Verification LLMs**: Google Gemini / Groq API
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.9+
+- Node.js & npm
+- Chrome or Chromium-based browser
+- API Keys for Gemini, Groq (and optionally Serper)
+
+### 1. Setup the Backend Engine
+
+Navigate to the `backend/` directory and set up your Python environment:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd backend
+python -m venv venv
+source venv/bin/activate  # Or `venv\Scripts\activate` on Windows
+pip install -r requirements.txt
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env` file in the `backend/` directory:
+```env
+GEMINI_API_KEY=your_gemini_key
+GROQ_API_KEY=your_groq_key
+# Optional:
+SERPER_API_KEY=your_serper_key
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Run the FastAPI server:
+```bash
+python main.py
+```
+*The API will be available at `http://localhost:8000`.*
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Install the Chrome Extension
 
-## Learn More
+1. Open Google Chrome and navigate to `chrome://extensions/`.
+2. Toggle **Developer mode** on (top right corner).
+3. Click **Load unpacked** and select the `chrome extention` directory from this repository.
+4. Pin the **Veridex** extension to your toolbar.
+5. Click the Veridex icon to select your preferred Verification API (Groq or Gemini).
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Setup the Web Dashboard (Optional)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+In the root directory, install and run the Next.js application:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+## 🧠 How it Works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Intercept**: The Chrome extension monitors incoming Server-Sent Events (SSE) from platforms like ChatGPT.
+2. **Decompose**: Text is sent to the FastAPI backend where an LLM decomposes the response into separate, testable claims.
+3. **Triangulate**: Each claim is concurrently checked against external Knowledge Bases.
+4. **Score & Correct**: Claims are scored based on source consensus and a Trust Score is generated.
+5. **Display**: The extension injects an unobtrusive UI overlay showing the Trust Score and itemized factual breakdowns.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛡️ Why Veridex?
+
+As AI becomes deeply integrated into enterprise operations, legal filings, and medical advice, LLM hallucinations are no longer just an annoyance—they are a liability. Veridex provides the essential validation layer required for safe AI deployment.
