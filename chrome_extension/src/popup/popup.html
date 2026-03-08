@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veridex</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">⚡</div>
+      <div>
+        <div class="app-name">Veridex</div>
+        <div class="platform-tag" id="platformTag">Detecting platform…</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="backend-status" id="backendStatus" title="Backend connection">
+        <span class="backend-dot" id="backendDot"></span>
+        <span class="backend-text" id="backendText">checking…</span>
+      </span>
+      <div class="status-dot" id="statusDot" title="Extension active"></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="audit">📊 Audit</button>
+    <button class="tab" data-tab="stats">📈 Stats</button>
+    <button class="tab" data-tab="settings">⚙️ Settings</button>
+  </div>
+
+  <!-- ── TAB: AUDIT ────────────────────────────────── -->
+  <div class="tab-content active" id="tab-audit">
+
+    <!-- Trust Score -->
+    <div class="score-card">
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 80 80">
+          <circle class="ring-bg" cx="40" cy="40" r="34" />
+          <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="34"
+            stroke-dasharray="213.6"
+            stroke-dashoffset="213.6"
+            style="stroke: #00c47d" />
+        </svg>
+        <div class="score-center">
+          <div class="score-num" id="scoreNum">—</div>
+          <div class="score-label">TRUST</div>
+        </div>
+      </div>
+      <div class="score-right">
+        <div class="score-title" id="scoreTitle">Waiting for AI response…</div>
+        <div class="score-verdict" id="scoreVerdict">Start a chat to begin auditing</div>
+        <div class="claim-chips" id="claimChips">
+          <span class="chip chip-v" id="chipV">✓ 0</span>
+          <span class="chip chip-u" id="chipU">? 0</span>
+          <span class="chip chip-h" id="chipH">✗ 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Claims List -->
+    <div class="section-title">Recent Claims</div>
+    <div class="claims-list" id="claimsList">
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">No claims analyzed yet.<br>Open ChatGPT, Claude, Gemini, DeepSeek, or Perplexity and start a conversation.</div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <button class="manual-audit-btn" id="manualAuditBtn">🔎 Audit Current Page</button>
+    <button class="fresh-btn" id="freshStartBtn" style="display:none">
+      ⚡ Generate Fresh Start Prompt
+    </button>
+
+  </div>
+
+  <!-- ── TAB: STATS ────────────────────────────────── -->
+  <div class="tab-content" id="tab-stats">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="statAnalyzed">0</div>
+        <div class="stat-label">Responses Audited</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statHallucinations" style="color:#ff3d5a">0</div>
+        <div class="stat-label">Hallucinations Caught</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statUncertain" style="color:#ffc107">0</div>
+        <div class="stat-label">Uncertain Claims</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statVerified" style="color:#00c47d">0</div>
+        <div class="stat-label">Verified Facts</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:12px;">Session Accuracy</div>
+    <div class="accuracy-bar-wrap">
+      <div class="accuracy-bar">
+        <div class="acc-seg acc-v" id="accV" style="width:0%"></div>
+        <div class="acc-seg acc-u" id="accU" style="width:0%"></div>
+        <div class="acc-seg acc-h" id="accH" style="width:0%"></div>
+      </div>
+      <div class="accuracy-legend">
+        <span class="leg-item"><span class="leg-dot" style="background:#00c47d"></span>Verified</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#ffc107"></span>Uncertain</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#ff3d5a"></span>Hallucinated</span>
+      </div>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">🔄 Reset Session Stats</button>
+  </div>
+
+  <!-- ── TAB: SETTINGS ─────────────────────────────── -->
+  <div class="tab-content" id="tab-settings">
+
+    <div class="setting-group">
+      <div class="setting-label">🌐 Backend Server</div>
+      <div class="setting-desc">Connect to the Veridex backend for full multi-source verification</div>
+      <div class="api-key-row">
+        <input type="text" class="api-input" id="backendUrlInput" placeholder="https://veridex-backend-4dxt.onrender.com" value="https://veridex-backend-4dxt.onrender.com" />
+        <button class="save-btn" id="testBackendBtn">Test</button>
+      </div>
+      <div class="api-status" id="backendUrlStatus"></div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">🔑 Groq API Key <span style="font-weight:400;color:#666680;font-size:10px">(fallback)</span></div>
+      <div class="setting-desc">Used when backend is unavailable. Free at <strong>console.groq.com</strong></div>
+      <div class="api-key-row">
+        <input type="password" class="api-input" id="apiKeyInput" placeholder="gsk_…" />
+        <button class="save-btn" id="saveKeyBtn">Save</button>
+      </div>
+      <div class="api-status" id="apiStatus"></div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">🎯 Domain Mode</div>
+      <div class="setting-desc">Tune the fact-checking for your use case</div>
+      <select class="select-input" id="domainMode">
+        <option value="general">🌐 General Knowledge</option>
+        <option value="medical">🏥 Medical / Health</option>
+        <option value="legal">⚖️ Legal / Law</option>
+        <option value="financial">💰 Financial / Markets</option>
+        <option value="historical">📜 Historical Facts</option>
+        <option value="scientific">🔬 Scientific / Research</option>
+      </select>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">📡 Detection Sensitivity</div>
+      <div class="setting-desc">How aggressive the hallucination detection should be</div>
+      <select class="select-input" id="sensitivity">
+        <option value="low">Low — Only obvious errors</option>
+        <option value="medium" selected>Medium — Balanced (recommended)</option>
+        <option value="high">High — Flag everything suspicious</option>
+      </select>
+    </div>
+
+    <div class="toggle-group">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Use Backend</div>
+          <div class="toggle-desc">Use multi-source verification (recommended)</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="useBackend" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Auto-Analyze</div>
+          <div class="toggle-desc">Automatically audit every AI response</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="autoAnalyze" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Show Trust Badge</div>
+          <div class="toggle-desc">Show score badge on each response</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="showBadge" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Extension Enabled</div>
+          <div class="toggle-desc">Pause without uninstalling</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="isEnabled" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <button class="save-all-btn" id="saveAllBtn">💾 Save Settings</button>
+    <div class="save-status" id="saveStatus"></div>
+
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

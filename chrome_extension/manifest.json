@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Veridex",
+  "version": "2.0.0",
+  "description": "Real-time AI fact-checker for ChatGPT, Claude, Gemini, DeepSeek, and Perplexity. Verifies claims against trusted sources (Wikipedia, Wikidata, PubMed, Google Fact Check), highlights inaccuracies, and shows corrections.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://chat.deepseek.com/*",
+    "https://www.perplexity.ai/*",
+    "https://veridex-backend-4dxt.onrender.com/*",
+    "http://127.0.0.1:8000/*",
+    "https://en.wikipedia.org/*",
+    "https://api.groq.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://chat.deepseek.com/*",
+        "https://www.perplexity.ai/*"
+      ],
+      "js": ["src/content/content-script.js"],
+      "css": ["src/content/injected.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    },
+    "default_title": "Veridex — AI Fact Checker"
+  },
+  "options_page": "src/options/options.html",
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

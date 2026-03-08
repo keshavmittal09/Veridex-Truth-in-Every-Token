@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Veridex — Setup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+  :root {
+    --bg: #07070d; --s1: #0e0e18; --s2: #141420;
+    --border: rgba(255,255,255,0.08); --green: #00c47d;
+    --red: #ff3d5a; --text: #dde0f0; --muted: #666680;
+    --blue: #4d9fff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .card { background: var(--s1); border: 1px solid var(--border); border-radius: 20px;
+    padding: 40px; max-width: 520px; width: 100%; }
+  .logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .logo { width: 52px; height: 52px; background: linear-gradient(135deg,#00c47d20,#4d9fff15);
+    border: 1.5px solid rgba(0,196,125,0.35); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 26px; }
+  h1 { font-size: 22px; font-weight: 800; }
+  .subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .section { margin-bottom: 24px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  input, select { width: 100%; background: var(--s2); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--text);
+    outline: none; transition: border-color 0.15s; font-family: 'JetBrains Mono', monospace; }
+  input:focus, select:focus { border-color: rgba(0,196,125,0.4); }
+  select { font-family: 'Inter', sans-serif; cursor: pointer; }
+  .row { display: flex; gap: 8px; margin-bottom: 4px; }
+  .btn-save { flex: 1; background: linear-gradient(135deg,#00c47d,#00a868);
+    border: none; border-radius: 8px; color: #000; font-size: 14px; font-weight: 700;
+    padding: 11px; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity 0.2s; }
+  .btn-save:hover { opacity: 0.9; }
+  .btn-test { flex: 0 0 auto; background: rgba(77,159,255,0.15); border: 1px solid rgba(77,159,255,0.3);
+    border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 600;
+    padding: 10px 14px; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .status { font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .status.ok { color: var(--green); }
+  .status.err { color: var(--red); }
+  .link { color: var(--green); text-decoration: none; font-size: 12px; }
+  .link:hover { text-decoration: underline; }
+  .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; }
+  .step-num { width: 22px; height: 22px; background: rgba(0,196,125,0.15); border: 1px solid rgba(0,196,125,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .step-text strong { color: var(--text); }
+  .free-badge { display:inline-block; background:rgba(0,196,125,0.15); border:1px solid rgba(0,196,125,0.3);
+    border-radius:99px; padding:2px 10px; font-size:11px; color:var(--green); font-weight:700; margin-left:6px; }
+  .rec-badge { display:inline-block; background:rgba(77,159,255,0.15); border:1px solid rgba(77,159,255,0.3);
+    border-radius:99px; padding:2px 10px; font-size:11px; color:var(--blue); font-weight:700; margin-left:6px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  code { background: var(--s2); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-row">
+    <div class="logo">⚡</div>
+    <div>
+      <h1>Veridex</h1>
+      <div class="subtitle">Setup — takes less than 60 seconds</div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Start the Veridex backend server</strong> — run <code>cd backend && python main.py</code> in your project <span class="rec-badge">RECOMMENDED</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Optionally get a <strong><a class="link" href="https://console.groq.com/keys" target="_blank">Groq API key</a></strong> as a fallback (if backend is unavailable) <span class="free-badge">FREE</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">Open <strong>ChatGPT, Claude, Gemini, DeepSeek, or Perplexity</strong> and start chatting — Veridex activates automatically</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <label>🌐 Backend Server URL</label>
+    <div class="desc">Veridex backend provides full multi-source verification (Wikipedia, Wikidata, PubMed, Google Fact Check, etc.)</div>
+    <div class="row">
+      <input type="text" id="backendUrl" placeholder="https://veridex-backend-4dxt.onrender.com" value="https://veridex-backend-4dxt.onrender.com" />
+      <button class="btn-test" id="testBtn">Test</button>
+    </div>
+    <div class="status" id="backendStatus"></div>
+  </div>
+
+  <div class="section">
+    <label>🔑 Groq API Key (fallback only)</label>
+    <div class="desc">Used when the backend is not running. Free at <a class="link" href="https://console.groq.com" target="_blank">console.groq.com</a> — no credit card required. Stored locally in your browser only.</div>
+    <div class="row">
+      <input type="password" id="apiKey" placeholder="gsk_…" autocomplete="off" />
+      <button class="btn-save" id="saveBtn">Save →</button>
+    </div>
+    <div class="status" id="keyStatus"></div>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <label>🎯 Default Domain Mode</label>
+    <div class="desc">You can change this anytime from the extension popup.</div>
+    <select id="domainMode">
+      <option value="general">🌐 General Knowledge (recommended)</option>
+      <option value="medical">🏥 Medical / Health</option>
+      <option value="legal">⚖️ Legal / Law</option>
+      <option value="financial">💰 Financial / Markets</option>
+      <option value="historical">📜 Historical Facts</option>
+      <option value="scientific">🔬 Scientific / Research</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <label>📡 Detection Sensitivity</label>
+    <select id="sensitivity">
+      <option value="low">Low — Only obvious errors</option>
+      <option value="medium" selected>Medium — Balanced (recommended)</option>
+      <option value="high">High — Flag everything suspicious</option>
+    </select>
+  </div>
+
+  <button class="btn-save" id="saveAllBtn" style="width:100%">✅ Save Settings & Start Verifying</button>
+  <div class="status" id="allStatus"></div>
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>

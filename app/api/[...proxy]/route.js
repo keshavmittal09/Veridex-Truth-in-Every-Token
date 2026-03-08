@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req, { params }) {
     const resolvedParams = await params;
     const path = resolvedParams.proxy.join('/');
-    const backendUrl = `http://127.0.0.1:8000/api/${path}`;
+    const backendUrl = `https://veridex-backend-4dxt.onrender.com/api/${path}`;
 
     try {
         const bodyText = await req.text();
